@@ -23,11 +23,6 @@ public class TableController {
         this.tableService = tableService;
     }
 
-//    @GetMapping("/prod/{id}")
-//    public List<Product> findProductByClassId(@PathVariable Long id){
-//        return tableService.findProductByClassId(id);
-//    }
-
     @GetMapping("/class/{id}")
     public ResponseEntity<List<ProductDto>> findProductByClass(@PathVariable long id){
         List<Product> products = tableService.findProductByClass(id);//store products
