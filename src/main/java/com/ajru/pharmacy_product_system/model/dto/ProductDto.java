@@ -5,7 +5,10 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Data
 public class ProductDto {
@@ -21,6 +24,7 @@ public class ProductDto {
     private double profit;
     private LocalDate expiryDate;
     private PlainClassificationDto plainClassificationDto;
+    private List<ProductTrxnJournalDto> productTrxnJournalDtos = new ArrayList<>();
 
     //transform product to productDto
     public static ProductDto from(Product product) {
@@ -36,6 +40,7 @@ public class ProductDto {
         productDto.setTotalPriceSold(product.getTotalPriceSold());
         productDto.setProfit(product.getProfit());
         productDto.setExpiryDate(product.getExpiryDate());
+        productDto.setProductTrxnJournalDtos(product.getProductTrxnJournals().stream().map(ProductTrxnJournalDto::from).collect(Collectors.toList()));
 
         if(Objects.nonNull(product.getClassification())) {
             productDto.setPlainClassificationDto(PlainClassificationDto.from(product.getClassification()));

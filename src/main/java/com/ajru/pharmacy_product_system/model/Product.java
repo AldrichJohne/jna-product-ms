@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -53,6 +55,16 @@ public class Product {
 
     @ManyToOne
     private Classification classification;
+
+    @OneToMany(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(name = "product_id")
+    private List<ProductTrxnJournal> productTrxnJournals = new ArrayList<>();
+
+    public void addProductTrxnJournal(ProductTrxnJournal productTrxnJournal) {
+        productTrxnJournals.add(productTrxnJournal);
+    }
 
     //transform ProductDto to product
     public static Product from(ProductDto productDto) {

@@ -2,8 +2,10 @@ package com.ajru.pharmacy_product_system.controller;
 
 import com.ajru.pharmacy_product_system.model.Classification;
 import com.ajru.pharmacy_product_system.model.Product;
+import com.ajru.pharmacy_product_system.model.ProductTrxnJournal;
 import com.ajru.pharmacy_product_system.model.dto.ClassificationDto;
 import com.ajru.pharmacy_product_system.model.dto.ProductDto;
+import com.ajru.pharmacy_product_system.model.dto.ProductTrxnJournalDto;
 import com.ajru.pharmacy_product_system.service.ClassificationService;
 import com.ajru.pharmacy_product_system.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +71,14 @@ public class InventoryController {
         return new ResponseEntity<>(ClassificationDto.from(classification), HttpStatus.OK);
     }
 
+    //new sold product
+    @RequestMapping(value = "{productId}/transactions", method = RequestMethod.POST)
+    public ResponseEntity<ProductDto> addTrxnForAProduct(@PathVariable final Long productId,
+                                                                                @RequestBody final ProductTrxnJournalDto productTrxnJournalDto) {
+        Product product = productService.addTxnForAProduct(productId, ProductTrxnJournal.from(productTrxnJournalDto));
+        return new ResponseEntity<>(ProductDto.from(product), HttpStatus.OK);
+    }
+
     //delete a product
     @RequestMapping(value = "/products/{id}",method = RequestMethod.DELETE)
     public ResponseEntity<ProductDto> deleteProduct(@PathVariable final Long id) {
@@ -79,6 +89,13 @@ public class InventoryController {
     //edit a product
     @RequestMapping(value = "/products/{id}", method = RequestMethod.PUT)
     public ResponseEntity<ProductDto> editProduct(@PathVariable final Long id, @RequestBody final ProductDto productDto) {
+        Product editedProduct = productService.editProduct(id, Product.from(productDto));
+        return new ResponseEntity<>(ProductDto.from(editedProduct), HttpStatus.OK);
+    }
+
+    //sell a product (total stock - sold quantity)
+    @RequestMapping(value = "/productToSell/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<ProductDto> sellProduct(@PathVariable final Long id, @RequestBody final ProductDto productDto) {
         Product editedProduct = productService.editProduct(id, Product.from(productDto));
         return new ResponseEntity<>(ProductDto.from(editedProduct), HttpStatus.OK);
     }
