@@ -1,10 +1,7 @@
 package com.ajru.pharmacy_product_system.controller;
 
-import ch.qos.logback.classic.joran.action.EvaluatorAction;
 import com.ajru.pharmacy_product_system.model.Classification;
-import com.ajru.pharmacy_product_system.model.Product;
 import com.ajru.pharmacy_product_system.model.dto.ClassificationDto;
-import com.ajru.pharmacy_product_system.model.dto.ProductDto;
 import com.ajru.pharmacy_product_system.service.ClassificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

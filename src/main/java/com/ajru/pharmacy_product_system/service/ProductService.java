@@ -1,6 +1,7 @@
 package com.ajru.pharmacy_product_system.service;
 
 import com.ajru.pharmacy_product_system.model.Product;
+import com.ajru.pharmacy_product_system.model.ProductTrxnJournal;
 import com.ajru.pharmacy_product_system.model.exception.ProductNotFoundException;
 import com.ajru.pharmacy_product_system.reposiroty.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,4 +68,12 @@ public class ProductService {
 
         return productToEditFinal;
     }
+
+    @Transactional
+    public Product addTxnForAProduct(Long productId, ProductTrxnJournal productTrxnJournal) {
+        Product product = getProduct(productId);
+        product.addProductTrxnJournal(productTrxnJournal);
+        return product;
+    }
+
 }
