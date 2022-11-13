@@ -23,7 +23,6 @@ public class ProductDto {
     private double profit;
     private LocalDate expiryDate;
     private PlainClassificationDto plainClassificationDto;
-    private List<ProductTrxnJournalDto> productTrxnJournalDtos = new ArrayList<>();
 
     //transform product to productDto
     public static ProductDto from(Product product) {
@@ -39,7 +38,6 @@ public class ProductDto {
         productDto.setTotalPriceSold(product.getTotalPriceSold());
         productDto.setProfit(product.getProfit());
         productDto.setExpiryDate(product.getExpiryDate());
-        productDto.setProductTrxnJournalDtos(product.getProductTrxnJournals().stream().map(ProductTrxnJournalDto::from).collect(Collectors.toList()));
 
         if(Objects.nonNull(product.getClassification())) {
             productDto.setPlainClassificationDto(PlainClassificationDto.from(product.getClassification()));
