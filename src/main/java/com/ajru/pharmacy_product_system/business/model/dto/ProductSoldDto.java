@@ -1,0 +1,37 @@
+package com.ajru.pharmacy_product_system.business.model.dto;
+
+import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Data
+public class ProductSoldDto {
+
+    private Long id;
+    private String classification;
+    private String productName;
+    private double price;
+    private double srp;
+    private int soldQuantity;
+    private double amount;
+    private double profit;
+    private LocalDate transactionDate;
+
+    //transform productSold to productSoldDto
+    public static ProductSoldDto from(ProductSold productSold) {
+        ProductSoldDto productSoldDto = new ProductSoldDto();
+        productSoldDto.setId(productSold.getId());
+        productSoldDto.setClassification(productSold.getClassification());
+        productSoldDto.setProductName(productSold.getProductName());
+        productSoldDto.setPrice(productSold.getPrice());
+        productSoldDto.setSrp(productSold.getSrp());
+        productSoldDto.setSoldQuantity(productSold.getSoldQuantity());
+        productSoldDto.setAmount(productSold.getAmount());
+        productSoldDto.setProfit(productSold.getProfit());
+        productSoldDto.setTransactionDate(productSold.getTransactionDate());
+
+        return productSoldDto;
+    }
+
+}

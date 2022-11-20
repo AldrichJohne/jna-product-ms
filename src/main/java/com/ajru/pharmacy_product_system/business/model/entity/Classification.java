@@ -1,4 +1,4 @@
-package com.ajru.pharmacy_product_system.business.model;
+package com.ajru.pharmacy_product_system.business.model.entity;
 
 import com.ajru.pharmacy_product_system.business.model.dto.ClassificationDto;
 import lombok.AllArgsConstructor;

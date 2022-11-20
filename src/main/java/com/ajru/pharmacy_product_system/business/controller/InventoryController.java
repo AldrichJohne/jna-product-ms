@@ -1,11 +1,14 @@
 package com.ajru.pharmacy_product_system.business.controller;
 
-import com.ajru.pharmacy_product_system.business.model.Classification;
-import com.ajru.pharmacy_product_system.business.model.Product;
+import com.ajru.pharmacy_product_system.business.model.dto.ProductSoldDto;
+import com.ajru.pharmacy_product_system.business.model.entity.Classification;
+import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.model.dto.ClassificationDto;
 import com.ajru.pharmacy_product_system.business.model.dto.ProductDto;
+import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.service.ClassificationService;
 import com.ajru.pharmacy_product_system.business.service.ProductService;
+import com.ajru.pharmacy_product_system.business.service.ProductSoldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +24,13 @@ public class InventoryController {
 
     private final ClassificationService classificationService;
     private final ProductService productService;
+    private final ProductSoldService productSoldService;
 
     @Autowired
-    public InventoryController(ClassificationService classificationService, ProductService productService) {
+    public InventoryController(ClassificationService classificationService, ProductService productService, ProductSoldService productSoldService) {
         this.classificationService = classificationService;
         this.productService = productService;
+        this.productSoldService = productSoldService;
     }
 
     //for classification
@@ -84,24 +89,39 @@ public class InventoryController {
     }
 
     //sell a product (total stock - sold quantity)
-    @RequestMapping(value = "/productToSell/{id}", method = RequestMethod.PUT)
+    @PutMapping("/productToSell/{id}")
     public ResponseEntity<ProductDto> sellProduct(@PathVariable final Long id, @RequestBody final ProductDto productDto) {
         Product editedProduct = productService.editProduct(id, Product.from(productDto));
         return new ResponseEntity<>(ProductDto.from(editedProduct), HttpStatus.OK);
     }
 
     //find a product
-    @RequestMapping(value = "/products/{id}" )
+    @GetMapping("/products/{id}" )
     public ResponseEntity<ProductDto> getProduct(@PathVariable final Long id) {
         Product product = productService.getProduct(id);
         return new ResponseEntity<>(ProductDto.from(product), HttpStatus.OK);
     }
 
     //find all products
-    @RequestMapping("/products")
+    @GetMapping("/products")
     public ResponseEntity<List<ProductDto>> getProducts() {
         List<Product> products = productService.getProducts();//store products
         List<ProductDto> productsDto = products.stream().map(ProductDto::from).collect(Collectors.toList());//convert products to productsDto
         return new ResponseEntity<>(productsDto, HttpStatus.OK);
+    }
+
+    //sell Product
+    @PostMapping("/product/sale/{id}")
+    public ResponseEntity<ProductSoldDto> sellProduct(@PathVariable final Long id, @RequestBody final ProductSoldDto productSoldDto) {
+        ProductSold productSold = productSoldService.sellProduct(id, ProductSold.from(productSoldDto));
+        return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
+    }
+
+    //get all products sold
+    @GetMapping("/products/sale")
+    public ResponseEntity<List<ProductSoldDto>> getProductSold() {
+        List<ProductSold> productSold = productSoldService.getProductSold();//store products
+        List<ProductSoldDto> productSoldDto = productSold.stream().map(ProductSoldDto::from).collect(Collectors.toList());//convert products to productsDto
+        return new ResponseEntity<>(productSoldDto, HttpStatus.OK);
     }
 }

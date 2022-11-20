@@ -1,6 +1,6 @@
 package com.ajru.pharmacy_product_system.business.model.dto;
 
-import com.ajru.pharmacy_product_system.business.model.Classification;
+import com.ajru.pharmacy_product_system.business.model.entity.Classification;
 import lombok.Data;
 
 @Data
