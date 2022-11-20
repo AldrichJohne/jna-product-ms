@@ -1,13 +1,10 @@
 package com.ajru.pharmacy_product_system.business.model.dto;
 
-import com.ajru.pharmacy_product_system.business.model.Product;
+import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Data
 public class ProductDto {

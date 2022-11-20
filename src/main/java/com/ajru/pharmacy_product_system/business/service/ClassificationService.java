@@ -1,10 +1,10 @@
 package com.ajru.pharmacy_product_system.business.service;
 
-import com.ajru.pharmacy_product_system.business.model.Classification;
+import com.ajru.pharmacy_product_system.business.model.entity.Classification;
 import com.ajru.pharmacy_product_system.business.reposiroty.ClassificationRepository;
-import com.ajru.pharmacy_product_system.business.model.Product;
-import com.ajru.pharmacy_product_system.business.model.exception.ClassificationNotFoundException;
-import com.ajru.pharmacy_product_system.business.model.exception.ProductAlreadyAssignedException;
+import com.ajru.pharmacy_product_system.business.model.entity.Product;
+import com.ajru.pharmacy_product_system.business.commons.exception.ClassificationNotFoundException;
+import com.ajru.pharmacy_product_system.business.commons.exception.ProductAlreadyAssignedException;
 import com.ajru.pharmacy_product_system.business.reposiroty.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +54,7 @@ public class ClassificationService {
         classificationToEdit.setName(classification.getName());
         return classificationToEdit;
     }
+
     //joint
     @Transactional
     public Classification addProductToClassification(Long classificationId, Long productId) {
@@ -71,7 +72,7 @@ public class ClassificationService {
     //add product then direct to a classification
     @Transactional
     public Classification addProductToClassificationDirectly(Long classificationId, Product product) {
-        Product productToAdd = new Product();
+        Product productToAdd;
         product.setSold(0);
         product.setProfit(0);
         product.setTotalPriceSold(0);

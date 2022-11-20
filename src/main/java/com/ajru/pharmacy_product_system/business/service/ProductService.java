@@ -1,12 +1,13 @@
 package com.ajru.pharmacy_product_system.business.service;
 
-import com.ajru.pharmacy_product_system.business.model.Product;
-import com.ajru.pharmacy_product_system.business.model.exception.ProductNotFoundException;
+import com.ajru.pharmacy_product_system.business.model.entity.Product;
+import com.ajru.pharmacy_product_system.business.commons.exception.ProductNotFoundException;
 import com.ajru.pharmacy_product_system.business.reposiroty.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -22,7 +23,7 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) {
-        Product productToAdd = new Product();
+        Product productToAdd;
         product.setSold(0);
         product.setProfit(0);
         product.setTotalPriceSold(0);
@@ -33,9 +34,7 @@ public class ProductService {
     }
 
     public List<Product> getProducts() {
-        return StreamSupport
-                    .stream(productRepository.findAll().spliterator(),false)
-                    .collect(Collectors.toList());
+        return new ArrayList<>(productRepository.findAll());
     }
 
     public Product getProduct(Long id) {
@@ -51,7 +50,7 @@ public class ProductService {
 
     @Transactional
     public Product editProduct(Long id, Product product) {
-        Product productToEditFinal= new Product();
+        Product productToEditFinal;
         Product productToEdit = getProduct(id);
         productToEdit.setName(product.getName());
         productToEdit.setTotalStock(product.getTotalStock());

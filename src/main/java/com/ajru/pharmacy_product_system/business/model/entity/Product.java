@@ -1,4 +1,4 @@
-package com.ajru.pharmacy_product_system.business.model;
+package com.ajru.pharmacy_product_system.business.model.entity;
 
 import com.ajru.pharmacy_product_system.business.model.dto.ProductDto;
 import lombok.AllArgsConstructor;
@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Data
 @AllArgsConstructor
@@ -55,10 +52,6 @@ public class Product {
 
     @ManyToOne
     private Classification classification;
-
-    @OneToMany(
-            cascade = CascadeType.ALL
-    )
 
     //transform ProductDto to product
     public static Product from(ProductDto productDto) {
