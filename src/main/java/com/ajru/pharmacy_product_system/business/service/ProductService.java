@@ -2,15 +2,13 @@ package com.ajru.pharmacy_product_system.business.service;
 
 import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.commons.exception.ProductNotFoundException;
-import com.ajru.pharmacy_product_system.business.reposiroty.ProductRepository;
+import com.ajru.pharmacy_product_system.business.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class ProductService {

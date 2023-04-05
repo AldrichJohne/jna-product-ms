@@ -7,5 +7,5 @@ import java.util.List;
 public interface ProductSoldService {
     ProductSold sellProduct(Long id, ProductSold productSold);
 
-    List<ProductSold> getProductSold();
+        List<ProductSold> getProductSold();
 }

@@ -2,7 +2,7 @@ package com.ajru.pharmacy_product_system.business.service.impl;
 
 import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
-import com.ajru.pharmacy_product_system.business.reposiroty.ProductSoldRepository;
+import com.ajru.pharmacy_product_system.business.repository.ProductSoldRepository;
 import com.ajru.pharmacy_product_system.business.service.ProductService;
 import com.ajru.pharmacy_product_system.business.service.ProductSoldService;
 import org.springframework.stereotype.Service;
