@@ -1,11 +1,11 @@
 package com.ajru.pharmacy_product_system.business.service;
 
 import com.ajru.pharmacy_product_system.business.model.entity.Classification;
-import com.ajru.pharmacy_product_system.business.reposiroty.ClassificationRepository;
+import com.ajru.pharmacy_product_system.business.repository.ClassificationRepository;
 import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.commons.exception.ClassificationNotFoundException;
 import com.ajru.pharmacy_product_system.business.commons.exception.ProductAlreadyAssignedException;
-import com.ajru.pharmacy_product_system.business.reposiroty.ProductRepository;
+import com.ajru.pharmacy_product_system.business.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.ajru.pharmacy_product_system.business.reposiroty;
+package com.ajru.pharmacy_product_system.business.repository;
 
 import com.ajru.pharmacy_product_system.business.model.entity.Classification;
 import org.springframework.data.jpa.repository.JpaRepository;
