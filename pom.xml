@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.ajru</groupId>
 	<artifactId>pharmacy_product_system</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>pharmacy_product_system</name>
 	<description>pharmacy inventory and cashier for its products</description>
 	<properties>

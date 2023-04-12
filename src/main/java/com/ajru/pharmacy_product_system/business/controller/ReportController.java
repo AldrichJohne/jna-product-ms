@@ -21,7 +21,7 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    @GetMapping("/bydaterange")
+    @GetMapping("/range")
     public ResponseEntity<DailyMonthlyReportDto> getProductSoldByDateRange(
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
