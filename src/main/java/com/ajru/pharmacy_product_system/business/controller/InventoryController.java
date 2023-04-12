@@ -109,18 +109,4 @@ public class InventoryController {
         return new ResponseEntity<>(productsDto, HttpStatus.OK);
     }
 
-    //sell Product
-    @PostMapping("/product/sale/{id}")
-    public ResponseEntity<ProductSoldDto> sellProduct(@PathVariable final Long id, @RequestBody final ProductSoldDto productSoldDto) {
-        ProductSold productSold = productSoldService.sellProduct(id, ProductSold.from(productSoldDto));
-        return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
-    }
-
-    //get all products sold
-    @GetMapping("/products/sale")
-    public ResponseEntity<List<ProductSoldDto>> getProductSold() {
-        List<ProductSold> productSold = productSoldService.getProductSold();//store products
-        List<ProductSoldDto> productSoldDto = productSold.stream().map(ProductSoldDto::from).collect(Collectors.toList());//convert products to productsDto
-        return new ResponseEntity<>(productSoldDto, HttpStatus.OK);
-    }
 }
