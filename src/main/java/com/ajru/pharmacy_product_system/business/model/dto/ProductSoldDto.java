@@ -17,6 +17,7 @@ public class ProductSoldDto {
     private double amount;
     private double profit;
     private LocalDate transactionDate;
+    private String isDiscounted;
 
     //transform productSold to productSoldDto
     public static ProductSoldDto from(ProductSold productSold) {
@@ -30,6 +31,7 @@ public class ProductSoldDto {
         productSoldDto.setAmount(productSold.getAmount());
         productSoldDto.setProfit(productSold.getProfit());
         productSoldDto.setTransactionDate(productSold.getTransactionDate());
+        productSoldDto.setIsDiscounted(productSold.getIsDiscounted());
 
         return productSoldDto;
     }
