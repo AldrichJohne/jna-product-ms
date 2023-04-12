@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/health")
 public class HealthCheckController {
 
