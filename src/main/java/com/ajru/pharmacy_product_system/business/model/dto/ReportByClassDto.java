@@ -5,22 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class DailyMonthlyReportDto {
-
-    @JsonProperty("date")
-    private String date;
-
-    @JsonProperty("profit")
-    private String profit;
+@NoArgsConstructor
+public class ReportByClassDto {
+    @JsonProperty("class")
+    private String classification;
 
     @JsonProperty("gross")
     private String gross;
 
-    @JsonProperty("breakdown")
-    private List<ReportByClassDto> breakdown;
+    @JsonProperty("profit")
+    private String profit;
 }
