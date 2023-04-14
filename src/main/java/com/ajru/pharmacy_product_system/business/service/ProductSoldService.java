@@ -7,5 +7,9 @@ import java.util.List;
 public interface ProductSoldService {
     ProductSold sellProduct(Long id, ProductSold productSold, Boolean isDiscounted);
 
-        List<ProductSold> getProductSold();
+    List<ProductSold> getProductSold();
+
+    ProductSold getProductSold(Long id);
+
+    ProductSold deleteProductSoldRecordAndReverseProductData(Long productId);
 }

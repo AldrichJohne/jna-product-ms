@@ -12,9 +12,8 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-
     @Transactional
     @Query(value = "SELECT * FROM Product p WHERE p.classification_id like :id%", nativeQuery = true)
-    public List<Product> findProductByClass(@Param("id") long id);
+    List<Product> findProductByClass(@Param("id") long id);
 
 }
