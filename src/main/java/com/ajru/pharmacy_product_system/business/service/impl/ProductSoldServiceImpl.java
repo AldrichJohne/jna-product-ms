@@ -34,7 +34,7 @@ public class ProductSoldServiceImpl implements ProductSoldService {
 
         productService.getProduct(id);
 
-        double amtSrp = this.getAmountSrp(productSold.getSrp(), productSold.getSoldQuantity(), isDiscounted);
+        double amtSrp = this.getAmountSrp(productSold.getSrp(), productSold.getSoldQuantity());
 
         double amtPrc = this.getAmountPrice(productSold.getPrice(), productSold.getSoldQuantity());
 
@@ -100,18 +100,8 @@ public class ProductSoldServiceImpl implements ProductSoldService {
         }
     }
 
-    private double getAmountSrp(double srp, int soldQuantity, Boolean isDiscounted) {
-        DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        double finalSrp;
-
-        if (isDiscounted.equals(true)) {
-            String finalSrpStr = decimalFormat.format((srp * soldQuantity) * this.discountRate);
-            finalSrp = Double.parseDouble(finalSrpStr);
-        } else {
-            finalSrp = (srp* soldQuantity);
-        }
-
-        return finalSrp;
+    private double getAmountSrp(double srp, int soldQuantity) {
+        return (srp * soldQuantity);
     }
 
     private double getAmountPrice(double price, int soldQuantity) {
@@ -121,7 +111,7 @@ public class ProductSoldServiceImpl implements ProductSoldService {
     private double getProfit(double amountSrp, double amountPrice) {
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String profitStr = decimalFormat.format(amountSrp - amountPrice);
-        return Double.parseDouble(profitStr);
+        return (Double.parseDouble(profitStr) * this.discountRate);
     }
 
 }
