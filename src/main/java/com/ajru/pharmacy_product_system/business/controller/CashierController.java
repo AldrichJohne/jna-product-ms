@@ -1,5 +1,6 @@
 package com.ajru.pharmacy_product_system.business.controller;
 
+import com.ajru.pharmacy_product_system.business.model.dto.ProductDto;
 import com.ajru.pharmacy_product_system.business.model.dto.ProductSoldDto;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.service.ProductSoldService;
@@ -35,6 +36,14 @@ public class CashierController {
             @RequestBody final ProductSoldDto productSoldDto,
             @RequestParam("discountSwitch") final Boolean isDiscounted) {
         ProductSold productSold = productSoldService.sellProduct(id, ProductSold.from(productSoldDto), isDiscounted);
+        return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/product/sell/{id}")
+    public ResponseEntity<ProductSoldDto> deleteProductSoldAndReverseProductData(
+            @PathVariable final Long id
+    ) {
+        ProductSold productSold = productSoldService.deleteProductSoldRecordAndReverseProductData(id);
         return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
     }
 }

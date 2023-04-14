@@ -9,6 +9,7 @@ import java.time.LocalDate;
 public class ProductSoldDto {
 
     private Long id;
+    private Long productId;
     private String classification;
     private String productName;
     private double price;
@@ -32,6 +33,7 @@ public class ProductSoldDto {
         productSoldDto.setProfit(productSold.getProfit());
         productSoldDto.setTransactionDate(productSold.getTransactionDate());
         productSoldDto.setIsDiscounted(productSold.getIsDiscounted());
+        productSoldDto.setProductId(productSold.getProductId());
 
         return productSoldDto;
     }

@@ -2,6 +2,7 @@ package com.ajru.pharmacy_product_system.business.service;
 
 import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.commons.exception.ProductNotFoundException;
+import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,27 @@ public class ProductService {
         productToEditFinal.setProfit((productToEdit.getSrpPerPc() - productToEdit.getPricePerPc()) * productToEdit.getSold());
 
         return productToEditFinal;
+    }
+
+    public void reverseSoldProduct(ProductSold productSold) {
+        Long productId = productSold.getProductId();
+        Product productToReverse = this.getProduct(productId);
+        productToReverse.setRemainingStock(
+                productToReverse.getRemainingStock() + productSold.getSoldQuantity());
+        productToReverse.setTotalPriceRemaining(
+                productToReverse.getRemainingStock() * productToReverse.getPricePerPc()
+        );
+        productToReverse.setTotalPriceSold(
+                ((productToReverse.getTotalStock() - productToReverse.getRemainingStock()) * productToReverse.getPricePerPc())
+        );
+        productToReverse.setProfit(
+                ((productToReverse.getTotalStock() - productToReverse.getRemainingStock()) * productToReverse.getSrpPerPc())
+                        - ((productToReverse.getTotalStock() - productToReverse.getRemainingStock()) * productToReverse.getPricePerPc())
+        );
+        productToReverse.setSold(
+                productToReverse.getSold() - productSold.getSoldQuantity()
+        );
+
     }
 
 }

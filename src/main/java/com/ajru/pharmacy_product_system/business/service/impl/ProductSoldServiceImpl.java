@@ -1,5 +1,6 @@
 package com.ajru.pharmacy_product_system.business.service.impl;
 
+import com.ajru.pharmacy_product_system.business.commons.exception.ProductNotFoundException;
 import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.repository.ProductSoldRepository;
@@ -52,6 +53,20 @@ public class ProductSoldServiceImpl implements ProductSoldService {
 
     public List<ProductSold> getProductSold() {
         return new ArrayList<>(productSoldRepository.findAll());
+    }
+
+    @Override
+    public ProductSold getProductSold(Long id) {
+        return productSoldRepository.findById(id).orElseThrow(() ->
+                new ProductNotFoundException(id));
+    }
+
+    @Override
+    public ProductSold deleteProductSoldRecordAndReverseProductData(Long productSoldId) {
+        ProductSold productSoldToDelete = getProductSold(productSoldId);
+        this.productService.reverseSoldProduct(productSoldToDelete);
+        productSoldRepository.delete(productSoldToDelete);
+        return productSoldToDelete;
     }
 
     private void updateSoldProductOrigin(Long id, ProductSold productSold) {

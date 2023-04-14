@@ -20,6 +20,9 @@ public class ProductSold {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
+    @Column(name = "productId")
+    private Long productId;
+
     @Column(name = "classification")
     private String classification;
 
@@ -59,6 +62,7 @@ public class ProductSold {
         productSold.setProfit(productSoldDto.getProfit());
         productSold.setTransactionDate(productSoldDto.getTransactionDate());
         productSold.setIsDiscounted(productSoldDto.getIsDiscounted());
+        productSold.setProductId(productSoldDto.getProductId());
 
         return productSold;
     }
