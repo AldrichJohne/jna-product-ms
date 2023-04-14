@@ -106,6 +106,9 @@ public class InventoryController {
     public ResponseEntity<List<ProductDto>> getProducts() {
         List<Product> products = productService.getProducts();//store products
         List<ProductDto> productsDto = products.stream().map(ProductDto::from).collect(Collectors.toList());//convert products to productsDto
+        for (int index = 0; index < productsDto.size(); index ++) {
+            productsDto.get(index).setClassName(productsDto.get(index).getPlainClassificationDto().getName());
+        }
         return new ResponseEntity<>(productsDto, HttpStatus.OK);
     }
 
