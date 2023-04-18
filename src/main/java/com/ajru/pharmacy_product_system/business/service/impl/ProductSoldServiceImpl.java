@@ -46,9 +46,12 @@ public class ProductSoldServiceImpl implements ProductSoldService {
         productSoldFinal.setProfit(profit);
         productSoldFinal.setIsDiscounted(String.valueOf(isDiscounted));
 
-        updateSoldProductParent(productSold, isDiscounted);
+        productSoldRepository.save(productSoldFinal);
 
-        return productSoldRepository.save(productSoldFinal);
+        productService.updateProductOnCashierActivity(
+                productSold.getProductId());
+
+        return productSoldFinal;
     }
 
     public List<ProductSold> getProductSold() {
@@ -64,40 +67,12 @@ public class ProductSoldServiceImpl implements ProductSoldService {
     @Override
     public ProductSold deleteProductSoldRecordAndReverseProductData(Long productSoldId) {
         ProductSold productSoldToDelete = getProductSold(productSoldId);
-        try {
-            this.productService.reverseSoldProduct(productSoldToDelete);
-        } catch (Exception error) {}
+        Long productId = productSoldToDelete.getProductId();
         productSoldRepository.delete(productSoldToDelete);
+
+        productService.updateProductOnCashierActivity(productId);
+
         return productSoldToDelete;
-    }
-
-    private void updateSoldProductParent(ProductSold productSold, Boolean isDiscounted) {
-        Product productToUpdate = productService.getProduct(productSold.getProductId());
-
-        productToUpdate.setRemainingStock(
-                (productToUpdate.getRemainingStock() - productSold.getSoldQuantity())
-        );
-        productToUpdate.setSold(
-                (productToUpdate.getSold() + productSold.getSoldQuantity())
-        );
-        productToUpdate.setTotalPriceRemaining(
-                (productToUpdate.getRemainingStock() * productToUpdate.getPricePerPc())
-        );
-        productToUpdate.setTotalPriceSold(
-                (productToUpdate.getSold() * productToUpdate.getPricePerPc())
-        );
-
-        if (Boolean.TRUE.equals(isDiscounted)) {
-            productToUpdate.setProfit(
-                    ((productToUpdate.getSold() * productToUpdate.getSrpPerPc())
-                            - (productToUpdate.getSold() * productToUpdate.getPricePerPc())
-            ) * this.discountRate);
-        } else {
-            productToUpdate.setProfit(
-                    (productToUpdate.getSold() * productToUpdate.getSrpPerPc())
-                            - (productToUpdate.getSold() * productToUpdate.getPricePerPc())
-            );
-        }
     }
 
     private double getAmountSrp(double srp, int soldQuantity, boolean isDiscounted) {

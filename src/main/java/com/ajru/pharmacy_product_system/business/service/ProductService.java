@@ -4,6 +4,7 @@ import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.commons.exception.ProductNotFoundException;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.repository.ProductRepository;
+import com.ajru.pharmacy_product_system.business.repository.ProductSoldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,12 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductSoldRepository productSoldRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductSoldRepository productSoldRepository) {
         this.productRepository = productRepository;
+        this.productSoldRepository = productSoldRepository;
     }
 
     public Product addProduct(Product product) {
@@ -66,25 +69,28 @@ public class ProductService {
         return productToEditFinal;
     }
 
-    public void reverseSoldProduct(ProductSold productSold) {
-        Long productId = productSold.getProductId();
-        Product productToReverse = this.getProduct(productId);
-        productToReverse.setRemainingStock(
-                productToReverse.getRemainingStock() + productSold.getSoldQuantity());
-        productToReverse.setTotalPriceRemaining(
-                productToReverse.getRemainingStock() * productToReverse.getPricePerPc()
-        );
-        productToReverse.setTotalPriceSold(
-                ((productToReverse.getTotalStock() - productToReverse.getRemainingStock()) * productToReverse.getPricePerPc())
-        );
-        productToReverse.setProfit(
-                ((productToReverse.getTotalStock() - productToReverse.getRemainingStock()) * productToReverse.getSrpPerPc())
-                        - ((productToReverse.getTotalStock() - productToReverse.getRemainingStock()) * productToReverse.getPricePerPc())
-        );
-        productToReverse.setSold(
-                productToReverse.getSold() - productSold.getSoldQuantity()
-        );
+    @Transactional
+    public void updateProductOnCashierActivity(Long productId) {
+        List<ProductSold> productSoldList = productSoldRepository.findByProductId(productId);
+        Product productParentToUpdate = getProduct(productId);
+        int totalQuantity = 0;
+        double totalProfit = 0.00;
+        for (ProductSold sold : productSoldList) {
+            totalQuantity = totalQuantity + sold.getSoldQuantity();
+            totalProfit = totalProfit + sold.getProfit();
+        }
 
+        productParentToUpdate.setSold(totalQuantity);
+        productParentToUpdate.setProfit(totalProfit);
+        productParentToUpdate.setRemainingStock(
+                productParentToUpdate.getTotalStock() - totalQuantity
+        );
+        productParentToUpdate.setTotalPriceRemaining(
+                productParentToUpdate.getRemainingStock() * productParentToUpdate.getPricePerPc()
+        );
+        productParentToUpdate.setTotalPriceSold(
+               totalQuantity * productParentToUpdate.getPricePerPc()
+        );
     }
 
 }

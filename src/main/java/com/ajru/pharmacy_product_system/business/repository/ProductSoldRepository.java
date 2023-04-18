@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface ProductSoldRepository extends JpaRepository<ProductSold, Long> {
     List<ProductSold> findByTransactionDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<ProductSold> findByProductId(Long id);
 }
 
