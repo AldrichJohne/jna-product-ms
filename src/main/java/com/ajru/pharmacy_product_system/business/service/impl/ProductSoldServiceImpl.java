@@ -32,21 +32,21 @@ public class ProductSoldServiceImpl implements ProductSoldService {
     @Override
     public ProductSold sellProduct(Long id, ProductSold productSold, Boolean isDiscounted) {
 
-        productService.getProduct(id);
+        productService.getProduct(productSold.getProductId());
 
-        double amtSrp = this.getAmountSrp(productSold.getSrp(), productSold.getSoldQuantity());
+        double totalSrp = this.getAmountSrp(productSold.getSrp(), productSold.getSoldQuantity(), isDiscounted);
 
-        double amtPrc = this.getAmountPrice(productSold.getPrice(), productSold.getSoldQuantity());
+        double totalCapitalPrice = this.getAmountPrice(productSold.getPrice(), productSold.getSoldQuantity());
 
-        double profit = this.getProfit(amtSrp, amtPrc);
+        double profit = this.getProfit(totalSrp, totalCapitalPrice);
 
         ProductSold productSoldFinal;
         productSoldFinal = productSold;
-        productSoldFinal.setAmount(amtSrp);
+        productSoldFinal.setAmount(totalSrp);
         productSoldFinal.setProfit(profit);
         productSoldFinal.setIsDiscounted(String.valueOf(isDiscounted));
 
-        updateSoldProductParent(id, productSold, isDiscounted);
+        updateSoldProductParent(productSold, isDiscounted);
 
         return productSoldRepository.save(productSoldFinal);
     }
@@ -71,8 +71,8 @@ public class ProductSoldServiceImpl implements ProductSoldService {
         return productSoldToDelete;
     }
 
-    private void updateSoldProductParent(Long id, ProductSold productSold, Boolean isDiscounted) {
-        Product productToUpdate = productService.getProduct(id);
+    private void updateSoldProductParent(ProductSold productSold, Boolean isDiscounted) {
+        Product productToUpdate = productService.getProduct(productSold.getProductId());
 
         productToUpdate.setRemainingStock(
                 (productToUpdate.getRemainingStock() - productSold.getSoldQuantity())
@@ -100,18 +100,26 @@ public class ProductSoldServiceImpl implements ProductSoldService {
         }
     }
 
-    private double getAmountSrp(double srp, int soldQuantity) {
-        return (srp * soldQuantity);
+    private double getAmountSrp(double srp, int soldQuantity, boolean isDiscounted) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        double finalGrossAmount;
+        if (Boolean.TRUE.equals(isDiscounted)) {
+            String finalGrossAmountStr = decimalFormat.format(
+                    (srp * discountRate) * soldQuantity
+            );
+            finalGrossAmount = Double.parseDouble(finalGrossAmountStr);
+        } else {
+            finalGrossAmount = srp * soldQuantity;
+        }
+        return finalGrossAmount;
     }
 
     private double getAmountPrice(double price, int soldQuantity) {
         return price * soldQuantity;
     }
 
-    private double getProfit(double amountSrp, double amountPrice) {
-        DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        String profitStr = decimalFormat.format(amountSrp - amountPrice);
-        return (Double.parseDouble(profitStr) * this.discountRate);
+    private double getProfit(double totalSrp, double totalCapitalPrice) {
+        return totalSrp - totalCapitalPrice;
     }
 
 }
