@@ -17,6 +17,7 @@ public class ProductDto {
     private double srpPerPc;
     private double totalPriceRemaining;
     private double totalPriceSold;
+    private String gross;
     private double profit;
     private LocalDate expiryDate;
     private String className;
@@ -36,6 +37,7 @@ public class ProductDto {
         productDto.setTotalPriceSold(product.getTotalPriceSold());
         productDto.setProfit(product.getProfit());
         productDto.setExpiryDate(product.getExpiryDate());
+        productDto.setGross(product.getGross());
 
         if(Objects.nonNull(product.getClassification())) {
             productDto.setPlainClassificationDto(PlainClassificationDto.from(product.getClassification()));

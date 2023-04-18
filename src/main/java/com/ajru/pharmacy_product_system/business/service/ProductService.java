@@ -75,11 +75,14 @@ public class ProductService {
         Product productParentToUpdate = getProduct(productId);
         int totalQuantity = 0;
         double totalProfit = 0.00;
+        double totalGrossAmount = 0.00;
         for (ProductSold sold : productSoldList) {
             totalQuantity = totalQuantity + sold.getSoldQuantity();
             totalProfit = totalProfit + sold.getProfit();
+            totalGrossAmount = totalGrossAmount + sold.getAmount();
         }
 
+        productParentToUpdate.setGross(String.valueOf(totalGrossAmount));
         productParentToUpdate.setSold(totalQuantity);
         productParentToUpdate.setProfit(totalProfit);
         productParentToUpdate.setRemainingStock(
