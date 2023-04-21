@@ -48,7 +48,10 @@ public class ProductSold {
     private LocalDate transactionDate;
 
     @Column(name = "isDiscounted")
-    protected String isDiscounted;
+    private String isDiscounted;
+
+    @Column(name = "pharmacist")
+    private String pharmacist;
 
     //transform ProductSoldDto to ProductSold
     public static ProductSold from(ProductSoldDto productSoldDto) {
@@ -63,6 +66,7 @@ public class ProductSold {
         productSold.setTransactionDate(productSoldDto.getTransactionDate());
         productSold.setIsDiscounted(productSoldDto.getIsDiscounted());
         productSold.setProductId(productSoldDto.getProductId());
+        productSold.setPharmacist(productSoldDto.getPharmacist());
 
         return productSold;
     }

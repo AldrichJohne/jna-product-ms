@@ -56,12 +56,9 @@ public class ProductService {
         Product productToEdit = getProduct(id);
         productToEdit.setName(product.getName());
         productToEdit.setTotalStock(product.getTotalStock());
-        productToEdit.setPricePerPc(product.getPricePerPc());
-        productToEdit.setSrpPerPc(product.getSrpPerPc());
         productToEdit.setExpiryDate(product.getExpiryDate());
-        productToEdit.setSold(product.getSold());
         productToEditFinal = productToEdit;
-        productToEditFinal.setRemainingStock(productToEdit.getTotalStock() - product.getSold());
+        productToEditFinal.setRemainingStock(productToEdit.getTotalStock() - productToEdit.getSold());
         productToEditFinal.setTotalPriceRemaining(productToEdit.getRemainingStock() * productToEdit.getPricePerPc());
         productToEditFinal.setTotalPriceSold(productToEdit.getSold() * productToEdit.getPricePerPc());
         productToEditFinal.setProfit((productToEdit.getSrpPerPc() - productToEdit.getPricePerPc()) * productToEdit.getSold());

@@ -19,6 +19,7 @@ public class ProductSoldDto {
     private double profit;
     private LocalDate transactionDate;
     private String isDiscounted;
+    private String pharmacist;
 
     //transform productSold to productSoldDto
     public static ProductSoldDto from(ProductSold productSold) {
@@ -34,6 +35,7 @@ public class ProductSoldDto {
         productSoldDto.setTransactionDate(productSold.getTransactionDate());
         productSoldDto.setIsDiscounted(productSold.getIsDiscounted());
         productSoldDto.setProductId(productSold.getProductId());
+        productSoldDto.setPharmacist(productSold.getPharmacist());
 
         return productSoldDto;
     }
