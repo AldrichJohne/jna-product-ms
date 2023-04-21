@@ -44,6 +44,9 @@ public class Product {
     @Column(name = "total_price_sold")
     private double totalPriceSold;
 
+    @Column(name = "gross")
+    private String gross;
+
     @Column(name = "profit")
     private double profit;
 
@@ -66,6 +69,7 @@ public class Product {
         product.setTotalPriceSold(productDto.getTotalPriceSold());
         product.setProfit(productDto.getProfit());
         product.setExpiryDate(productDto.getExpiryDate());
+        product.setGross(productDto.getGross());
         return product;
     }
 
