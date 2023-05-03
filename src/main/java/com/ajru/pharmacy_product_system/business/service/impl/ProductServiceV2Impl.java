@@ -26,7 +26,7 @@ public class ProductServiceV2Impl implements ProductServiceV2 {
     }
 
     @Override
-    public List<Product> setUpProducts(List<ProductDto> productDtoList) {
+    public List<ProductDto> setUpProducts(List<ProductDto> productDtoList) {
 
         final List<Product> products = productDtoList.stream()
                 .map(Product::from)
@@ -45,7 +45,9 @@ public class ProductServiceV2Impl implements ProductServiceV2 {
 
         this.batchSaveProducts(products);
 
-        return products;
+        return products.stream()
+                .map(ProductDto::from)
+                .collect(Collectors.toList());
     }
 
     private Classification getClassification(List<ProductDto> productDtoList, int index) {
