@@ -27,7 +27,7 @@ public class Classification {
     @OneToMany(
             cascade = CascadeType.ALL
     )
-    @JoinColumn(name = "class_id")
+
     private List<Product> products = new ArrayList<>();
 
     public void addProduct(Product product) {

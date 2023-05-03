@@ -1,7 +1,7 @@
 package com.ajru.pharmacy_product_system.business.service;
 
 import com.ajru.pharmacy_product_system.business.model.entity.Product;
-import com.ajru.pharmacy_product_system.business.commons.exception.ProductNotFoundException;
+import com.ajru.pharmacy_product_system.commons.exception.ProductNotFoundException;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.repository.ProductRepository;
 import com.ajru.pharmacy_product_system.business.repository.ProductSoldRepository;

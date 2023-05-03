@@ -1,4 +1,4 @@
-package com.ajru.pharmacy_product_system.business.commons.exception;
+package com.ajru.pharmacy_product_system.commons.exception;
 
 import java.text.MessageFormat;
 
