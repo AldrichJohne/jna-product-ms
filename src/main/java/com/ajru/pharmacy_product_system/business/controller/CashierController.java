@@ -1,6 +1,5 @@
 package com.ajru.pharmacy_product_system.business.controller;
 
-import com.ajru.pharmacy_product_system.business.model.dto.ProductDto;
 import com.ajru.pharmacy_product_system.business.model.dto.ProductSoldDto;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.service.ProductSoldService;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/cashier")
+@RequestMapping("/product-ms/cashier")
 public class CashierController {
 
     private final ProductSoldService productSoldService;

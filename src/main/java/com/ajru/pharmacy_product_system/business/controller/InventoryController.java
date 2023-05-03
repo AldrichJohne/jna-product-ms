@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/product-ms/inventory")
 public class InventoryController {
 
     private final ClassificationService classificationService;

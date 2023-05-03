@@ -24,17 +24,6 @@ public class ProductService {
         this.productSoldRepository = productSoldRepository;
     }
 
-    public Product addProduct(Product product) {
-        Product productToAdd;
-        product.setSold(0);
-        product.setProfit(0);
-        product.setTotalPriceSold(0);
-        productToAdd = product;
-        productToAdd.setRemainingStock(product.getTotalStock() - product.getSold());
-        productToAdd.setTotalPriceRemaining(productToAdd.getRemainingStock() * product.getPricePerPc());
-        return productRepository.save(productToAdd);
-    }
-
     public List<Product> getProducts() {
         return new ArrayList<>(productRepository.findAll());
     }

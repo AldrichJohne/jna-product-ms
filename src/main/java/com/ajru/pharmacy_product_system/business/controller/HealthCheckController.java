@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/health")
+@RequestMapping("/product-ms/health")
 public class HealthCheckController {
 
     private final HealthCheckServiceImpl healthCheckService;

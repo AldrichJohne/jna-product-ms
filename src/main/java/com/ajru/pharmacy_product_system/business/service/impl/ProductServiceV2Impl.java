@@ -6,6 +6,7 @@ import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.repository.ProductRepository;
 import com.ajru.pharmacy_product_system.business.service.ClassificationService;
 import com.ajru.pharmacy_product_system.business.service.ProductServiceV2;
+import com.ajru.pharmacy_product_system.commons.exception.ClassificationNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,30 +26,34 @@ public class ProductServiceV2Impl implements ProductServiceV2 {
 
     @Override
     public List<Product> setUpProducts(Long classId, List<ProductDto> productDtoList) {
-        final List<Product> products = new ArrayList<>();
-        final Classification classification = classificationService.getClassification(classId);
+        try {
+            final List<Product> products = new ArrayList<>();
+            final Classification classification = classificationService.getClassification(classId);
 
-        for (ProductDto dto : productDtoList) {
-            Product product = Product.from(dto);
-            products.add(product);
+            for (ProductDto dto : productDtoList) {
+                Product product = Product.from(dto);
+                products.add(product);
+            }
+
+            for (Product product : products) {
+                product.setGross("0");
+                product.setSold(0);
+                product.setProfit(0);
+                product.setTotalPriceSold(0);
+                product.setClassification(classification);
+                product.setRemainingStock(product.getTotalStock() - product.getSold());
+                product.setTotalPriceRemaining(product.getRemainingStock() * product.getPricePerPc());
+            }
+
+            this.batchSaveProducts(products);
+
+            return products;
+        } catch (Exception err) {
+            throw new ClassificationNotFoundException(classId);
         }
-
-        for (Product product : products) {
-            product.setSold(0);
-            product.setProfit(0);
-            product.setTotalPriceSold(0);
-            product.setClassification(classification);
-            product.setRemainingStock(product.getTotalStock() - product.getSold());
-            product.setTotalPriceRemaining(product.getRemainingStock() * product.getPricePerPc());
-        }
-
-        this.batchSaveProducts(products);
-
-        return products;
     }
 
-    private List<Product> batchSaveProducts(final List<Product> products) {
+    private void batchSaveProducts(final List<Product> products) {
         productRepository.saveAll(products);
-        return products;
     }
 }

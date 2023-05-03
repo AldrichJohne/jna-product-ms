@@ -2,14 +2,12 @@ package com.ajru.pharmacy_product_system.business.controller;
 
 import com.ajru.pharmacy_product_system.business.model.dto.ProductDto;
 import com.ajru.pharmacy_product_system.business.service.ProductServiceV2;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/product-ms/v2/products")
 public class ProductsControllerV2 {
     private final ProductServiceV2 productServiceV2;
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/report")
+@RequestMapping("/product-ms/report")
 public class ReportController {
 
     private final ReportService reportService;
