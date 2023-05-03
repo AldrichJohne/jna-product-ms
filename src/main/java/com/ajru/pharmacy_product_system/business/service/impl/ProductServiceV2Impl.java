@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceV2Impl implements ProductServiceV2 {
@@ -25,31 +26,33 @@ public class ProductServiceV2Impl implements ProductServiceV2 {
     }
 
     @Override
-    public List<Product> setUpProducts(Long classId, List<ProductDto> productDtoList) {
+    public List<Product> setUpProducts(List<ProductDto> productDtoList) {
+
+        final List<Product> products = productDtoList.stream()
+                .map(Product::from)
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < products.size(); i++) {
+            Product product = products.get(i);
+            product.setGross("0");
+            product.setSold(0);
+            product.setProfit(0);
+            product.setTotalPriceSold(0);
+            product.setClassification(getClassification(productDtoList, i));
+            product.setRemainingStock(product.getTotalStock() - product.getSold());
+            product.setTotalPriceRemaining(product.getRemainingStock() * product.getPricePerPc());
+        }
+
+        this.batchSaveProducts(products);
+
+        return products;
+    }
+
+    private Classification getClassification(List<ProductDto> productDtoList, int index) {
         try {
-            final List<Product> products = new ArrayList<>();
-            final Classification classification = classificationService.getClassification(classId);
-
-            for (ProductDto dto : productDtoList) {
-                Product product = Product.from(dto);
-                products.add(product);
-            }
-
-            for (Product product : products) {
-                product.setGross("0");
-                product.setSold(0);
-                product.setProfit(0);
-                product.setTotalPriceSold(0);
-                product.setClassification(classification);
-                product.setRemainingStock(product.getTotalStock() - product.getSold());
-                product.setTotalPriceRemaining(product.getRemainingStock() * product.getPricePerPc());
-            }
-
-            this.batchSaveProducts(products);
-
-            return products;
+            return classificationService.getClassification(productDtoList.get(index).getClassId());
         } catch (Exception err) {
-            throw new ClassificationNotFoundException(classId);
+            throw new ClassificationNotFoundException(productDtoList.get(index).getClassId());
         }
     }
 
