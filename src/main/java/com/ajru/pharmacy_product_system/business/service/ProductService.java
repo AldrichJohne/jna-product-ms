@@ -1,7 +1,7 @@
 package com.ajru.pharmacy_product_system.business.service;
 
 import com.ajru.pharmacy_product_system.business.model.entity.Product;
-import com.ajru.pharmacy_product_system.business.commons.exception.ProductNotFoundException;
+import com.ajru.pharmacy_product_system.commons.exception.ProductNotFoundException;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.repository.ProductRepository;
 import com.ajru.pharmacy_product_system.business.repository.ProductSoldRepository;
@@ -22,17 +22,6 @@ public class ProductService {
     public ProductService(ProductRepository productRepository, ProductSoldRepository productSoldRepository) {
         this.productRepository = productRepository;
         this.productSoldRepository = productSoldRepository;
-    }
-
-    public Product addProduct(Product product) {
-        Product productToAdd;
-        product.setSold(0);
-        product.setProfit(0);
-        product.setTotalPriceSold(0);
-        productToAdd = product;
-        productToAdd.setRemainingStock(product.getTotalStock() - product.getSold());
-        productToAdd.setTotalPriceRemaining(productToAdd.getRemainingStock() * product.getPricePerPc());
-        return productRepository.save(productToAdd);
     }
 
     public List<Product> getProducts() {

@@ -1,14 +1,11 @@
 package com.ajru.pharmacy_product_system.business.controller;
 
-import com.ajru.pharmacy_product_system.business.model.dto.ProductSoldDto;
 import com.ajru.pharmacy_product_system.business.model.entity.Classification;
 import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import com.ajru.pharmacy_product_system.business.model.dto.ClassificationDto;
 import com.ajru.pharmacy_product_system.business.model.dto.ProductDto;
-import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.service.ClassificationService;
 import com.ajru.pharmacy_product_system.business.service.ProductService;
-import com.ajru.pharmacy_product_system.business.service.ProductSoldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +15,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/inventory")
+@RequestMapping("/product-ms/inventory")
 public class InventoryController {
 
     private final ClassificationService classificationService;
     private final ProductService productService;
-    private final ProductSoldService productSoldService;
 
     @Autowired
-    public InventoryController(ClassificationService classificationService, ProductService productService, ProductSoldService productSoldService) {
+    public InventoryController(ClassificationService classificationService, ProductService productService) {
         this.classificationService = classificationService;
         this.productService = productService;
-        this.productSoldService = productSoldService;
     }
 
     //for classification
