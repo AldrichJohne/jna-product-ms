@@ -15,10 +15,9 @@ public class ProductsControllerV2 {
         this.productServiceV2 = productServiceV2;
     }
 
-    @PostMapping("/save-all/{classificationId}")
-    String batchSaveProducts(@PathVariable final Long classificationId,
-                             @RequestBody final List<ProductDto> productDto) {
-        productServiceV2.setUpProducts(classificationId, productDto);
+    @PostMapping("/batch")
+    String batchSaveProducts(@RequestBody final List<ProductDto> productDto) {
+        productServiceV2.setUpProducts(productDto);
         return "Success";
     }
 }

@@ -21,6 +21,7 @@ public class ProductDto {
     private double profit;
     private LocalDate expiryDate;
     private String className;
+    private Long classId;
     private PlainClassificationDto plainClassificationDto;
 
     //transform product to productDto

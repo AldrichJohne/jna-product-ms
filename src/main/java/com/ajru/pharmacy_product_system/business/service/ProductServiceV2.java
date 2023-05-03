@@ -6,5 +6,5 @@ import com.ajru.pharmacy_product_system.business.model.entity.Product;
 import java.util.List;
 
 public interface ProductServiceV2 {
-    List<Product> setUpProducts(Long id, List<ProductDto> products);
+    List<Product> setUpProducts(List<ProductDto> products);
 }
