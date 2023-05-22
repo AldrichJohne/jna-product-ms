@@ -53,6 +53,9 @@ public class ProductSold {
     @Column(name = "pharmacist")
     private String pharmacist;
 
+    @Column(name = "invoiceCode")
+    private String invoiceCode;
+
     //transform ProductSoldDto to ProductSold
     public static ProductSold from(ProductSoldDto productSoldDto) {
         ProductSold productSold = new ProductSold();
@@ -67,6 +70,7 @@ public class ProductSold {
         productSold.setIsDiscounted(productSoldDto.getIsDiscounted());
         productSold.setProductId(productSoldDto.getProductId());
         productSold.setPharmacist(productSoldDto.getPharmacist());
+        productSold.setInvoiceCode(productSoldDto.getInvoiceCode());
 
         return productSold;
     }

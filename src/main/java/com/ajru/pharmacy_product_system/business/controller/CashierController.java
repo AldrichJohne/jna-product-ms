@@ -34,7 +34,7 @@ public class CashierController {
             @PathVariable final Long id,
             @RequestBody final ProductSoldDto productSoldDto,
             @RequestParam("discountSwitch") final Boolean isDiscounted) {
-        ProductSold productSold = productSoldService.sellProduct(id, ProductSold.from(productSoldDto), isDiscounted);
+        ProductSold productSold = productSoldService.sellProduct(ProductSold.from(productSoldDto), isDiscounted);
         return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
     }
 

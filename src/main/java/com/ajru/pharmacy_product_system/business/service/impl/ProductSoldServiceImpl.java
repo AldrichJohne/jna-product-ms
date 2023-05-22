@@ -29,7 +29,7 @@ public class ProductSoldServiceImpl implements ProductSoldService {
     }
 
     @Override
-    public ProductSold sellProduct(Long id, ProductSold productSold, Boolean isDiscounted) {
+    public ProductSold sellProduct(ProductSold productSold, Boolean isDiscounted) {
 
         productService.getProduct(productSold.getProductId());
 
