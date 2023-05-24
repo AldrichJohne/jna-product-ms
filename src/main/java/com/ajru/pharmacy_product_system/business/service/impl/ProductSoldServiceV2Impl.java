@@ -4,6 +4,7 @@ import com.ajru.pharmacy_product_system.business.model.dto.ProductSoldDto;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.service.ProductSoldService;
 import com.ajru.pharmacy_product_system.business.service.ProductSoldServiceV2;
+import com.ajru.pharmacy_product_system.business.util.InvoiceNumberGenerator;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,9 +15,11 @@ import java.util.stream.Collectors;
 public class ProductSoldServiceV2Impl implements ProductSoldServiceV2 {
 
     private final ProductSoldService productSoldService;
+    private final InvoiceNumberGenerator invoiceNumberGenerator;
 
-    public ProductSoldServiceV2Impl(ProductSoldService productSoldService) {
+    public ProductSoldServiceV2Impl(ProductSoldService productSoldService, InvoiceNumberGenerator invoiceNumberGenerator) {
         this.productSoldService = productSoldService;
+        this.invoiceNumberGenerator = invoiceNumberGenerator;
     }
 
     @Override
@@ -28,8 +31,7 @@ public class ProductSoldServiceV2Impl implements ProductSoldServiceV2 {
                 .map(ProductSold::from)
                 .collect(Collectors.toList());
 
-        for (int i = 0; i < productSoldList.size(); i++) {
-            ProductSold productSold = productSoldList.get(i);
+        for (ProductSold productSold : productSoldList) {
             productSold.setInvoiceCode(invoiceCode);
             this.productSoldService.sellProduct(productSold, Boolean.valueOf(productSold.getIsDiscounted()));
             finalReturn.add(productSold);
@@ -42,6 +44,7 @@ public class ProductSoldServiceV2Impl implements ProductSoldServiceV2 {
     }
 
     protected String generateInvoice() {
-        return "invoiceSample";
+        System.out.println(this.invoiceNumberGenerator.invoiceNumber());
+        return this.invoiceNumberGenerator.invoiceNumber();
     }
 }
