@@ -44,7 +44,6 @@ public class ProductSoldServiceV2Impl implements ProductSoldServiceV2 {
     }
 
     protected String generateInvoice() {
-        System.out.println(this.invoiceNumberGenerator.invoiceNumber());
         return this.invoiceNumberGenerator.invoiceNumber();
     }
 }
