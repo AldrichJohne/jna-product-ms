@@ -21,4 +21,7 @@ public class HealthCheckDto {
 
     @JsonProperty("requestFrom")
     private String requestFrom;
+
+    @JsonProperty("businessInfo")
+    private BusinessInfoDto businessInfo;
 }
