@@ -1,5 +1,8 @@
 package com.ajru.pharmacy_product_system.business.util;
 
+import com.ajru.pharmacy_product_system.commons.constants.StringConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -10,7 +13,18 @@ import java.util.Base64;
 @Service
 public class InvoiceNumberGenerator {
 
+    private final Logger logger;
+
+    public InvoiceNumberGenerator() {
+        this.logger = LoggerFactory.getLogger(this.getClass());;
+    }
+
     public String invoiceNumber() {
+        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
+        logger.info(StringConstants.SERVICE_LAYER.getValue(),
+                this.getClass().getName(),
+                currentMethodName,
+                "generating invoice number");
         return getCurrentDateAndTime() + generateRandomAlphanumeric();
     }
 

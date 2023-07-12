@@ -2,8 +2,11 @@ package com.ajru.pharmacy_product_system.commons.constants;
 
 public enum StringConstants {
 
-    WEB_REQ("Web request: Endpoint description = {}, Method = {}, URL = {}"),
-    WEB_RESP("Sending response: {}");
+    WEB_REQ("Web Request: Endpoint Description = {}, Method = {}, URL = {}"),
+    WEB_RESP("Sending Response: {}"),
+    SERVICE_LAYER("Service Layer: ClassName: {}, MethodName: {}, Description: {}"),
+    SERVICE_LAYER_DESCRIPTION("Description: {}, MethodName: {}"),
+    SERVICE_LAYER_UPDATE_FROM_TO("Updating {} from {} to {}, MethodName: {}");
 
     private final String value;
 

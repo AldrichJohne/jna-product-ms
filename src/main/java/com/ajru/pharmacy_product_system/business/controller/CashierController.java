@@ -33,9 +33,8 @@ public class CashierController {
     ) {
         logger.info(StringConstants.WEB_REQ.getValue(),
                 "get products sold records", request.getMethod(), request.getRequestURL());
-        List<ProductSold> productSold = productSoldService.getProductSold();//store products
-        List<ProductSoldDto> productSoldDto = productSold.stream().map(ProductSoldDto::from).collect(Collectors.toList());//convert products to productsDto
-        logger.info(StringConstants.WEB_RESP.getValue(), productSoldDto);
+        final List<ProductSold> productSold = productSoldService.getProductSold();//store products
+        final List<ProductSoldDto> productSoldDto = productSold.stream().map(ProductSoldDto::from).collect(Collectors.toList());
         return new ResponseEntity<>(productSoldDto, HttpStatus.OK);
     }
 
@@ -48,8 +47,7 @@ public class CashierController {
             final HttpServletRequest request) {
         logger.info(StringConstants.WEB_REQ.getValue(),
                 "sell product, old API", request.getMethod(), request.getRequestURL());
-        ProductSold productSold = productSoldService.sellProduct(ProductSold.from(productSoldDto), isDiscounted);
-        logger.info(StringConstants.WEB_RESP.getValue(), ProductSoldDto.from(productSold));
+        final ProductSold productSold = productSoldService.sellProduct(ProductSold.from(productSoldDto), isDiscounted);
         return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
     }
 
@@ -60,7 +58,7 @@ public class CashierController {
     ) {
         logger.info(StringConstants.WEB_REQ.getValue(),
                 "delete a sold product record", request.getMethod(), request.getRequestURL());
-        ProductSold productSold = productSoldService.deleteProductSoldRecordAndReverseProductData(id);
+        final ProductSold productSold = productSoldService.deleteProductSoldRecordAndReverseProductData(id);
         return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
     }
 }

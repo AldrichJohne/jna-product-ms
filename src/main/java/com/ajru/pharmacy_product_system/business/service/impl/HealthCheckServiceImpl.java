@@ -2,6 +2,9 @@ package com.ajru.pharmacy_product_system.business.service.impl;
 
 import com.ajru.pharmacy_product_system.business.model.dto.BusinessInfoDto;
 import com.ajru.pharmacy_product_system.business.model.dto.HealthCheckDto;
+import com.ajru.pharmacy_product_system.commons.constants.StringConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,7 @@ public class HealthCheckServiceImpl {
     private final String businessAlias;
     private final String businessAddress;
     private final String businessTin;
+    private final Logger logger;
 
     public HealthCheckServiceImpl(
             @Value("${info.app.name}") final String applicationName,
@@ -33,9 +37,15 @@ public class HealthCheckServiceImpl {
         this.businessAlias = businessAlias;
         this.businessAddress = businessAddress;
         this.businessTin = businessTin;
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     public HealthCheckDto healthCheck(final HttpServletRequest request) {
+        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
+        logger.info(StringConstants.SERVICE_LAYER.getValue(),
+                this.getClass().getName(),
+                currentMethodName,
+                "building HealthCheckDto to return on response");
         return new HealthCheckDto(
                 this.applicationName,
                 this.applicationVersion,

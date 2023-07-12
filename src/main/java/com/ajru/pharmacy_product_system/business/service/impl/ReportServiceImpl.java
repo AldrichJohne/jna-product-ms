@@ -5,6 +5,9 @@ import com.ajru.pharmacy_product_system.business.model.dto.ReportByClassDto;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.repository.ProductSoldRepository;
 import com.ajru.pharmacy_product_system.business.service.ReportService;
+import com.ajru.pharmacy_product_system.commons.constants.StringConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,13 +19,23 @@ import java.util.List;
 public class ReportServiceImpl implements ReportService {
 
     private final ProductSoldRepository productSoldRepository;
+    private final Logger logger;
 
     public ReportServiceImpl(ProductSoldRepository productSoldRepository) {
         this.productSoldRepository = productSoldRepository;
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     @Override
     public DailyMonthlyReportDto getProductSoldByDateRange(LocalDate startDate, LocalDate endDate) {
+        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
+        logger.info(StringConstants.SERVICE_LAYER.getValue(),
+                this.getClass().getName(),
+                currentMethodName,
+                "setting up report by given date range");
+
+        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
+                "finding transactions between given date ranges", currentMethodName);
         final List<ProductSold> productSoldList  = productSoldRepository.findByTransactionDateBetween(startDate, endDate);
         final List<ReportByClassDto> breakdown = new ArrayList<>();
         double totalAmount = 0.0;
@@ -39,11 +52,15 @@ public class ReportServiceImpl implements ReportService {
         double othersProfit = 0.0;
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM-dd-yyyy");
 
+        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
+                "calculating Gross and Profit of all fetched transactions", currentMethodName);
         for (ProductSold productSold : productSoldList) {
             totalAmount += productSold.getAmount();
             totalProfit += productSold.getProfit();
         }
 
+        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
+                "calculating Gross and Profit of by product category/classification", currentMethodName);
         for (ProductSold productSold : productSoldList) {
             switch (productSold.getClassification()) {
                 case "branded":
@@ -69,6 +86,8 @@ public class ReportServiceImpl implements ReportService {
             }
         }
 
+        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
+                "adding calculated gross and profit by category breakdown", currentMethodName);
         breakdown.add(new ReportByClassDto(
                 "branded", String.valueOf(brandedGross), String.valueOf(brandedProfit)
         ));
