@@ -30,7 +30,6 @@ public class ProductsControllerV2 {
         logger.info(StringConstants.WEB_REQ.getValue(),
                 "batch addition of products", request.getMethod(), request.getRequestURL());
         final List<ProductDto> productDtoList = productServiceV2.setUpProducts(productDto);
-        logger.info(StringConstants.WEB_RESP.getValue(), productDtoList);
         return new ResponseEntity<>(productDtoList, HttpStatus.OK);
     }
 }

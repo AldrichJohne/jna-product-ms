@@ -30,8 +30,7 @@ public class CashierControllerV2 {
             final HttpServletRequest request) {
         logger.info(StringConstants.WEB_REQ.getValue(),
                 "sell product, new API", request.getMethod(), request.getRequestURL());
-        List<ProductSoldDto> productSoldList = productSoldServiceV2.batchSell(productSoldDtoList);
-        logger.info(StringConstants.WEB_RESP.getValue(), productSoldList);
+        final List<ProductSoldDto> productSoldList = productSoldServiceV2.batchSell(productSoldDtoList);
         return new ResponseEntity<>(productSoldList, HttpStatus.OK);
     }
 }
