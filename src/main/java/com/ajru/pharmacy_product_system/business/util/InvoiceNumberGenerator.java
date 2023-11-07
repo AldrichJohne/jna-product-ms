@@ -16,10 +16,10 @@ public class InvoiceNumberGenerator {
     private final Logger logger;
 
     public InvoiceNumberGenerator() {
-        this.logger = LoggerFactory.getLogger(this.getClass());;
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
-    public String invoiceNumber() {
+    public final String invoiceNumber() {
         final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
         logger.info(StringConstants.SERVICE_LAYER.getValue(),
                 this.getClass().getName(),
@@ -29,16 +29,16 @@ public class InvoiceNumberGenerator {
     }
 
     private static String generateRandomAlphanumeric() {
-        int length = 3;
-        byte[] randomBytes = new byte[length];
+        final int length = 3;
+        final byte[] randomBytes = new byte[length];
         new SecureRandom().nextBytes(randomBytes);
-        String base64Encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
-        return base64Encoded.replaceAll("[^A-Za-z0-9]", "");
+        final String baseSixtyFourEncoded = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+        return baseSixtyFourEncoded.replaceAll("[^A-Za-z0-9]", "");
     }
 
     private static String getCurrentDateAndTime() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        final LocalDateTime currentDateTime = LocalDateTime.now();
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         return currentDateTime.format(formatter);
     }
 }

@@ -110,7 +110,7 @@ public class ProductService {
                 productToEditFinal.getTotalPriceRemaining(),
                 newTotalPriceRemaining,
                 currentMethodName);
-        productToEditFinal.setTotalPriceRemaining(Integer.parseInt(newTotalPriceRemaining));
+        productToEditFinal.setTotalPriceRemaining((int) Double.parseDouble(newTotalPriceRemaining));
 
         final String newPriceSold = String.valueOf(productToEdit.getSold() * productToEdit.getPricePerPc());
         logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
@@ -118,15 +118,15 @@ public class ProductService {
                 productToEditFinal.getTotalPriceSold(),
                 newPriceSold,
                 currentMethodName);
-        productToEditFinal.setTotalPriceSold(Integer.parseInt(newPriceSold));
+        productToEditFinal.setTotalPriceSold((int) Double.parseDouble(newPriceSold));
 
         final String newProfit = String.valueOf((productToEdit.getSrpPerPc() - productToEdit.getPricePerPc()) * productToEdit.getSold());
         logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
-                "TotalPriceSold ((SrpPerPc - PricePerPc) * Sold)",
+                "TotalProfit ((SrpPerPc - PricePerPc) * Sold)",
                 productToEditFinal.getProfit(),
                 newProfit,
                 currentMethodName);
-        productToEditFinal.setProfit(Integer.parseInt(newProfit));
+        productToEditFinal.setProfit((int) Double.parseDouble(newProfit));
 
         return productToEditFinal;
     }

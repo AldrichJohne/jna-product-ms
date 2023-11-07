@@ -1,0 +1,10 @@
+<FindBugsFilter>
+    <Match>
+        <Package name="~jooq.*"/>
+    </Match>
+    <Match>
+        <Class name="AbstractHttpProvider.class"/>
+        <Method name="createloginOneFaAuthHeaders"/>
+        <Bug pattern="DM_DEFAULT_ENCODING" />
+    </Match>
+</FindBugsFilter>

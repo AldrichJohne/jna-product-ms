@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+    <!-- Suppress these files because Spring Boot needed them -->
+    <suppress checks="ClassDataAbstractionCoupling" files=".*.java"/>
+    <suppress checks="FinalClass" files="MainApp.java"/>
+    <suppress checks="Indentation" files="MainApp.java"/>
+    <suppress checks="FileTabCharacter" files="MainApp.java"/>
+    <suppress checks="HideUtilityClassConstructor" files="MainApp.java"/>
+    <suppress checks="FinalClass" files=".*ServiceImpl.java"/>
+    <suppress checks="FinalClass" files=".*RepositoryImpl.java"/>
+    <suppress checks="ParameterNumber" files=".*Repository.java"/>
+    <suppress checks="ParameterNumber" files=".*RepositoryImpl.java"/>
+    <suppress checks="ParameterNumber" files=".*ServiceImpl.java"/>
+    <suppress checks="ParameterNumber" files=".*WorkflowImpl.java"/>
+    <suppress checks="ParameterNumber" files=".*Controller.java"/>
+    <suppress checks="ParameterNumber" files=".*Request.java"/>
+    <suppress checks="ParameterNumber" files=".*Response.java"/>
+    <suppress checks="ParameterNumber" files=".*Factory*."/>
+    <suppress checks="ParameterNumber" files=".*model*."/>
+    <suppress checks="CyclomaticComplexity" files="CreateQrTransactionResponseInterpreter.java"/>
+</suppressions>
