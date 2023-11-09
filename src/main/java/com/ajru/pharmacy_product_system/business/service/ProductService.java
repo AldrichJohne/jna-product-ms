@@ -132,63 +132,41 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProductOnCashierActivity(Long productId) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "update a product being sold by unique id from the database using repository class");
+    public void updateProductOnCashierActivity(final Long productId) {
 
-        List<ProductSold> productSoldList = productSoldRepository.findByProductId(productId);
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "getting product to update",
-                currentMethodName);
-        Product productParentToUpdate = getProduct(productId);
-
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "calculating products , soldQuantity, profit and gross amount",
-                currentMethodName);
+        final List<ProductSold> productSoldList;
         int totalQuantity = 0;
         double totalProfit = 0.00;
         double totalGrossAmount = 0.00;
-        for (ProductSold sold : productSoldList) {
+
+        try {
+            productSoldList = productSoldRepository.findByProductId(productId);
+        } catch (final Exception err) {
+            throw new ProductNotFoundException(productId);
+        }
+
+        final Product productParentToUpdate = getProduct(productId);
+
+        for (final ProductSold sold : productSoldList) {
             totalQuantity = totalQuantity + sold.getSoldQuantity();
             totalProfit = totalProfit + sold.getProfit();
             totalGrossAmount = totalGrossAmount + sold.getAmount();
         }
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "setting product's gross",
-                currentMethodName);
         productParentToUpdate.setGross(String.valueOf(totalGrossAmount));
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "setting product's sold quantity",
-                currentMethodName);
         productParentToUpdate.setSold(totalQuantity);
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "setting product's total profit",
-                currentMethodName);
         productParentToUpdate.setProfit(totalProfit);
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "setting product's remaining stock",
-                currentMethodName);
         productParentToUpdate.setRemainingStock(
                 productParentToUpdate.getTotalStock() - totalQuantity
         );
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "setting product's price remaining",
-                currentMethodName);
         productParentToUpdate.setTotalPriceRemaining(
                 productParentToUpdate.getRemainingStock() * productParentToUpdate.getPricePerPc()
         );
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "setting product's total price sold",
-                currentMethodName);
         productParentToUpdate.setTotalPriceSold(
                totalQuantity * productParentToUpdate.getPricePerPc()
         );

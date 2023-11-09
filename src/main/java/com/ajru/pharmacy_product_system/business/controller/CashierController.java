@@ -1,16 +1,19 @@
 package com.ajru.pharmacy_product_system.business.controller;
 
+import com.ajru.pharmacy_product_system.business.model.dto.GenericGoodResponseDto;
 import com.ajru.pharmacy_product_system.business.model.dto.ProductSoldDto;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.service.ProductSoldService;
-import com.ajru.pharmacy_product_system.commons.constants.StringConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ajru.pharmacy_product_system.commons.constants.LogType;
+import com.ajru.pharmacy_product_system.commons.dto.GenericExceptionResponseDto;
+import com.ajru.pharmacy_product_system.commons.exception.ProductNotFoundException;
+import com.ajru.pharmacy_product_system.commons.service.LoggerCentralService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,46 +22,92 @@ import java.util.stream.Collectors;
 public class CashierController {
 
     private final ProductSoldService productSoldService;
-    private final Logger logger;
+    private final LoggerCentralService loggerCentral;
 
-    public CashierController(ProductSoldService productSoldService) {
+    public CashierController(
+            final ProductSoldService productSoldService,
+            final LoggerCentralService loggerCentral) {
         this.productSoldService = productSoldService;
-        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.loggerCentral = loggerCentral;
     }
 
-    //get all products sold
     @GetMapping("/products/sell")
-    public ResponseEntity<List<ProductSoldDto>> getProductSold(
+    public ResponseEntity<Object> fetchSoldProduct(
             final HttpServletRequest request
     ) {
-        logger.info(StringConstants.WEB_REQ.getValue(),
-                "get products sold records", request.getMethod(), request.getRequestURL());
-        final List<ProductSold> productSold = productSoldService.getProductSold();//store products
-        final List<ProductSoldDto> productSoldDto = productSold.stream().map(ProductSoldDto::from).collect(Collectors.toList());
-        return new ResponseEntity<>(productSoldDto, HttpStatus.OK);
-    }
+        this.loggerCentral.logApiRequest(
+                LogType.INFO,
+                "API Request: fetch sold products",
+                request.getMethod(),
+                request.getRequestURL().toString()
+        );
+        final GenericExceptionResponseDto exceptionResponseDto = new GenericExceptionResponseDto();
+        try {
+            final List<ProductSold> productSold = productSoldService.getProductSold();
+            final List<ProductSoldDto> productSoldDto = productSold.stream().map(ProductSoldDto::from).collect(Collectors.toList());
 
-    //sell Product
-    @PostMapping("/product/sell/{id}")
-    public ResponseEntity<ProductSoldDto> sellProduct(
-            @PathVariable final Long id,
-            @RequestBody final ProductSoldDto productSoldDto,
-            @RequestParam("discountSwitch") final Boolean isDiscounted,
-            final HttpServletRequest request) {
-        logger.info(StringConstants.WEB_REQ.getValue(),
-                "sell product, old API", request.getMethod(), request.getRequestURL());
-        final ProductSold productSold = productSoldService.sellProduct(ProductSold.from(productSoldDto), isDiscounted);
-        return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
+            final GenericGoodResponseDto genericGoodResponseDto = new GenericGoodResponseDto();
+
+            this.loggerCentral.logApiResponse(LogType.INFO, "Successfully fetch all sold products record");
+
+            genericGoodResponseDto.setResponseTitle("Get all sold products record");
+            genericGoodResponseDto.setResponseDescription("Successfully fetch all sold products record");
+            genericGoodResponseDto.setResponseObject(productSoldDto);
+
+            return new ResponseEntity<>(genericGoodResponseDto, HttpStatus.OK);
+        } catch (Exception err) {
+            loggerCentral.logException(err);
+            exceptionResponseDto.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+            exceptionResponseDto.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            exceptionResponseDto.setMessage(err.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponseDto);
+        }
+
     }
 
     @DeleteMapping("/product/sell/{id}")
-    public ResponseEntity<ProductSoldDto> deleteProductSoldAndReverseProductData(
+    public ResponseEntity<Object> deleteProductSoldAndReverseProductData(
             @PathVariable final Long id,
             final HttpServletRequest request
     ) {
-        logger.info(StringConstants.WEB_REQ.getValue(),
-                "delete a sold product record", request.getMethod(), request.getRequestURL());
-        final ProductSold productSold = productSoldService.deleteProductSoldRecordAndReverseProductData(id);
-        return new ResponseEntity<>(ProductSoldDto.from(productSold), HttpStatus.OK);
+        this.loggerCentral.logApiRequest(
+                LogType.INFO,
+                "API Request: delete a sold product record",
+                request.getMethod(),
+                request.getRequestURL().toString()
+        );
+        final GenericExceptionResponseDto exceptionResponseDto = new GenericExceptionResponseDto();
+        try {
+            final ProductSold deletedSoldProductRecord = productSoldService.deleteProductSoldRecordAndReverseProductData(id);
+            final GenericGoodResponseDto genericGoodResponseDto = new GenericGoodResponseDto();
+
+            this.loggerCentral.logApiResponse(
+                    LogType.INFO,
+                    String.format("Successfully delete sold product record: %s",
+                            deletedSoldProductRecord.getProductName()));
+
+            genericGoodResponseDto.setResponseTitle("Delete sold product/s record");
+            genericGoodResponseDto.setResponseDescription("Successfully deleted record");
+            genericGoodResponseDto.setResponseObject(deletedSoldProductRecord);
+
+            return new ResponseEntity<>(genericGoodResponseDto, HttpStatus.OK);
+        } catch (final ProductNotFoundException | NullPointerException err) {
+            loggerCentral.logException(err);
+
+            exceptionResponseDto.setErrorCode(HttpStatus.BAD_REQUEST.toString());
+            exceptionResponseDto.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            exceptionResponseDto.setMessage(err.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponseDto);
+        } catch (Exception err) {
+            loggerCentral.logException(err);
+
+            exceptionResponseDto.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+            exceptionResponseDto.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            exceptionResponseDto.setMessage(err.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionResponseDto);
+        }
+
     }
 }
