@@ -1,11 +1,13 @@
 package com.ajru.pharmacy_product_system.business.service.impl;
 
 import com.ajru.pharmacy_product_system.commons.constants.StringConstants;
+import com.ajru.pharmacy_product_system.commons.exception.FetchingFromDatabaseException;
 import com.ajru.pharmacy_product_system.commons.exception.ProductNotFoundException;
 import com.ajru.pharmacy_product_system.business.model.entity.ProductSold;
 import com.ajru.pharmacy_product_system.business.repository.ProductSoldRepository;
 import com.ajru.pharmacy_product_system.business.service.ProductService;
 import com.ajru.pharmacy_product_system.business.service.ProductSoldService;
+import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,14 +38,9 @@ public class ProductSoldServiceImpl implements ProductSoldService {
     @Override
     public ProductSold sellProduct(ProductSold productSold, Boolean isDiscounted) {
         final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "setup product to be sold");
+
         productService.getProduct(productSold.getProductId());
 
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                "calling getAmountSrp method", currentMethodName);
         double totalSrp = this.getAmountSrp(productSold.getSrp(), productSold.getSoldQuantity(), isDiscounted);
 
         logger.info(StringConstants.SERVICE_LAYER.getValue(),
@@ -73,46 +70,34 @@ public class ProductSoldServiceImpl implements ProductSoldService {
     }
 
     public List<ProductSold> getProductSold() {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "fetching all sold product records");
-        return new ArrayList<>(productSoldRepository.findAll());
+        try {
+            return new ArrayList<>(productSoldRepository.findAll());
+        } catch (final Exception err) {
+            throw new FetchingFromDatabaseException();
+        }
     }
 
     @Override
     public ProductSold getProductSold(Long id) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "fetching sold product record by unique id");
         return productSoldRepository.findById(id).orElseThrow(() ->
                 new ProductNotFoundException(id));
     }
 
     @Override
     public ProductSold deleteProductSoldRecordAndReverseProductData(Long productSoldId) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "setting up deletion of sold product record");
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "calling getProductSold method to fetch the sold record of specific product to be remove",
-                currentMethodName);
-        ProductSold productSoldToDelete = getProductSold(productSoldId);
+        ProductSold productSoldToDelete = this.getProductSold(productSoldId);//ProductNotFoundException
 
-        Long productId = productSoldToDelete.getProductId();
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "deleting sold product record by unique id",
-                currentMethodName);
+        Long productId = 0L;
+
+        try {
+            productId = productSoldToDelete.getProductId(); //NullPointerException
+        } catch (final NullPointerException err) {
+            throw new NullPointerException();
+        }
+
         productSoldRepository.delete(productSoldToDelete);
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "calling updateProductOnCashierActivity in ProductService", currentMethodName);
         productService.updateProductOnCashierActivity(productId);
 
         return productSoldToDelete;

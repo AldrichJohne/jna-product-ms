@@ -8,6 +8,7 @@ import com.ajru.pharmacy_product_system.business.service.ClassificationService;
 import com.ajru.pharmacy_product_system.business.service.ProductServiceV2;
 import com.ajru.pharmacy_product_system.commons.constants.StringConstants;
 import com.ajru.pharmacy_product_system.commons.exception.ClassificationNotFoundException;
+import com.ajru.pharmacy_product_system.commons.exception.SavingProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,8 @@ public class ProductServiceV2Impl implements ProductServiceV2 {
     }
 
     @Override
-    public List<ProductDto> setUpProducts(List<ProductDto> productDtoList) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "set up multiple products to be save");
+    public List<ProductDto> setUpProducts(final List<ProductDto> productDtoList) {
+
         final List<Product> products = productDtoList.stream()
                 .map(Product::from)
                 .collect(Collectors.toList());
@@ -51,9 +48,6 @@ public class ProductServiceV2Impl implements ProductServiceV2 {
             product.setTotalPriceRemaining(product.getRemainingStock() * product.getPricePerPc());
         }
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "calling method batchSaveProducts",
-                currentMethodName);
         this.batchSaveProducts(products);
 
         return products.stream()
@@ -78,6 +72,10 @@ public class ProductServiceV2Impl implements ProductServiceV2 {
         logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
                 "saving multiple products to the database",
                 currentMethodName);
-        productRepository.saveAll(products);
+        try {
+            productRepository.saveAll(products);
+        } catch (Exception err) {
+            throw new SavingProductException();
+        }
     }
 }

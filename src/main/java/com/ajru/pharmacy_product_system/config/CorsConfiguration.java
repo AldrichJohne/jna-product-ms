@@ -12,7 +12,7 @@ public class CorsConfiguration {
     private final String allowedOrigins;
 
     public CorsConfiguration(
-            @Value("${allowed.origins}") String allowedOrigins) {
+            @Value("${allowed.origins}") final String allowedOrigins) {
         this.allowedOrigins = allowedOrigins;
     }
 
@@ -21,7 +21,7 @@ public class CorsConfiguration {
 
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(final CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(allowedOrigins)
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
