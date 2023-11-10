@@ -1,6 +1,5 @@
 package com.ajru.pharmacy_product_system.business.util;
 
-import com.ajru.pharmacy_product_system.commons.constants.StringConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,6 +12,7 @@ import java.util.Base64;
 @Service
 public class InvoiceNumberGenerator {
 
+    private static final String RANDOM_ALPHANUMERIC_REPLACEMENT = "RD26";
     private final Logger logger;
 
     public InvoiceNumberGenerator() {
@@ -20,20 +20,20 @@ public class InvoiceNumberGenerator {
     }
 
     public final String invoiceNumber() {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "generating invoice number");
         return getCurrentDateAndTime() + generateRandomAlphanumeric();
     }
 
-    private static String generateRandomAlphanumeric() {
-        final int length = 3;
-        final byte[] randomBytes = new byte[length];
-        new SecureRandom().nextBytes(randomBytes);
-        final String baseSixtyFourEncoded = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
-        return baseSixtyFourEncoded.replaceAll("[^A-Za-z0-9]", "");
+    private String generateRandomAlphanumeric() {
+        try {
+            final int length = 3;
+            final byte[] randomBytes = new byte[length];
+            new SecureRandom().nextBytes(randomBytes);
+            final String baseSixtyFourEncoded = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+            return baseSixtyFourEncoded.replaceAll("[^A-Za-z0-9]", "");
+        } catch (final Exception err) {
+            this.logger.info("An error occurred while generating random alphanumeric: {}", err.getMessage());
+            return RANDOM_ALPHANUMERIC_REPLACEMENT;
+        }
     }
 
     private static String getCurrentDateAndTime() {

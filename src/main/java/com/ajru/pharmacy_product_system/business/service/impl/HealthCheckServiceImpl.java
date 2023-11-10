@@ -41,11 +41,6 @@ public class HealthCheckServiceImpl {
     }
 
     public HealthCheckDto healthCheck(final HttpServletRequest request) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "building HealthCheckDto to return on response");
         return new HealthCheckDto(
                 this.applicationName,
                 this.applicationVersion,

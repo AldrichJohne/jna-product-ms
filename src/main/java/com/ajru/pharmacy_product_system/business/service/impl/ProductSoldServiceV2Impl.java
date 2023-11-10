@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,26 +29,18 @@ public class ProductSoldServiceV2Impl implements ProductSoldServiceV2 {
     }
 
     @Override
-    public List<ProductSoldDto> batchSell(List<ProductSoldDto> productSoldDtoList) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "setting up multiple selling of products");
+    public List<ProductSoldDto> sellMultipleProductsSimultaneously(
+            final List<ProductSoldDto> lstProductSoldDto) {
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "calling generateInvoice method to generate invoice number", currentMethodName);
-        final String invoiceCode = this.generateInvoice();
+        final String invoiceCode = this.invoiceNumberGenerator.invoiceNumber();
 
         final List<ProductSold> finalReturn = new ArrayList<>();
 
-        final List<ProductSold> productSoldList = productSoldDtoList.stream()
+        final List<ProductSold> productSoldList = lstProductSoldDto.stream()
                 .map(ProductSold::from)
                 .collect(Collectors.toList());
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "putting invoice number on every productSold object", currentMethodName);
-        for (ProductSold productSold : productSoldList) {
+        for (final ProductSold productSold : productSoldList) {
             productSold.setInvoiceCode(invoiceCode);
             this.productSoldService.sellProduct(productSold, Boolean.valueOf(productSold.getIsDiscounted()));
             finalReturn.add(productSold);
@@ -59,12 +52,4 @@ public class ProductSoldServiceV2Impl implements ProductSoldServiceV2 {
 
     }
 
-    protected String generateInvoice() {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "calling invoiceNumber method in InvoiceNumberGenerator class");
-        return this.invoiceNumberGenerator.invoiceNumber();
-    }
 }

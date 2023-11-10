@@ -39,11 +39,6 @@ public class ProductService {
     }
 
     public Product getProduct(Long id) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "fetch single products by unique id from the database using repository class");
         return productRepository.findById(id).orElseThrow(() ->
         new ProductNotFoundException(id));
     }
@@ -60,72 +55,33 @@ public class ProductService {
     }
 
     @Transactional
-    public Product editProduct(Long id, Product product) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "update the product similar to what is in the body of the request from the database");
+    public Product updateProduct(final Long id, final Product product) {
         Product productToEditFinal;
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "getting product to update",
-                currentMethodName);
         Product productToEdit = getProduct(id);
 
-        logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
-                "ProductName",
-                productToEdit.getName(),
-                product.getName(),
-                currentMethodName);
         productToEdit.setName(product.getName());
 
-        logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
-                "TotalStock",
-                productToEdit.getTotalStock(),
-                product.getTotalStock(),
-                currentMethodName);
         productToEdit.setTotalStock(product.getTotalStock());
 
-        logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
-                "ExpiryDate",
-                productToEdit.getExpiryDate(),
-                product.getExpiryDate(),
-                currentMethodName);
         productToEdit.setExpiryDate(product.getExpiryDate());
 
         productToEditFinal = productToEdit;
 
         final String newRemainingStock = String.valueOf(productToEdit.getTotalStock() - productToEdit.getSold());
-        logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
-                "RemainingStock (TotalStock - Sold)",
-                productToEditFinal.getRemainingStock(),
-                newRemainingStock,
-                currentMethodName);
+
         productToEditFinal.setRemainingStock(Integer.parseInt(newRemainingStock));
 
         final String newTotalPriceRemaining = String.valueOf(productToEdit.getRemainingStock() * productToEdit.getPricePerPc());
-        logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
-                "TotalPriceRemaining (RemainingStock * PricePerPc)",
-                productToEditFinal.getTotalPriceRemaining(),
-                newTotalPriceRemaining,
-                currentMethodName);
+
         productToEditFinal.setTotalPriceRemaining((int) Double.parseDouble(newTotalPriceRemaining));
 
         final String newPriceSold = String.valueOf(productToEdit.getSold() * productToEdit.getPricePerPc());
-        logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
-                "TotalPriceSold (Sold * PricePerPc)",
-                productToEditFinal.getTotalPriceSold(),
-                newPriceSold,
-                currentMethodName);
+
         productToEditFinal.setTotalPriceSold((int) Double.parseDouble(newPriceSold));
 
         final String newProfit = String.valueOf((productToEdit.getSrpPerPc() - productToEdit.getPricePerPc()) * productToEdit.getSold());
-        logger.info(StringConstants.SERVICE_LAYER_UPDATE_FROM_TO.getValue(),
-                "TotalProfit ((SrpPerPc - PricePerPc) * Sold)",
-                productToEditFinal.getProfit(),
-                newProfit,
-                currentMethodName);
+
         productToEditFinal.setProfit((int) Double.parseDouble(newProfit));
 
         return productToEditFinal;
