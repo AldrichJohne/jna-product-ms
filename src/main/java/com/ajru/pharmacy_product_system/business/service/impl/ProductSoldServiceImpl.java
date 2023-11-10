@@ -37,19 +37,14 @@ public class ProductSoldServiceImpl implements ProductSoldService {
 
     @Override
     public ProductSold sellProduct(ProductSold productSold, Boolean isDiscounted) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
 
         productService.getProduct(productSold.getProductId());
 
-        double totalSrp = this.getAmountSrp(productSold.getSrp(), productSold.getSoldQuantity(), isDiscounted);
+        final double totalSrp = this.getAmountSrp(productSold.getSrp(), productSold.getSoldQuantity(), isDiscounted);
 
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                "calling getAmountPrice method", currentMethodName);
-        double totalCapitalPrice = this.getAmountPrice(productSold.getPrice(), productSold.getSoldQuantity());
+        final double totalCapitalPrice = this.getAmountPrice(productSold.getPrice(), productSold.getSoldQuantity());
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "calling getProfit method", currentMethodName);
-        double profit = this.getProfit(totalSrp, totalCapitalPrice);
+        final double profit = this.getProfit(totalSrp, totalCapitalPrice);
 
         ProductSold productSoldFinal;
         productSoldFinal = productSold;
@@ -57,12 +52,8 @@ public class ProductSoldServiceImpl implements ProductSoldService {
         productSoldFinal.setProfit(profit);
         productSoldFinal.setIsDiscounted(String.valueOf(isDiscounted));
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "saving updated product to the database", currentMethodName);
         productSoldRepository.save(productSoldFinal);
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "calling updateProductOnCashierActivity in ProductService", currentMethodName);
         productService.updateProductOnCashierActivity(
                 productSold.getProductId());
 
@@ -86,12 +77,12 @@ public class ProductSoldServiceImpl implements ProductSoldService {
     @Override
     public ProductSold deleteProductSoldRecordAndReverseProductData(Long productSoldId) {
 
-        ProductSold productSoldToDelete = this.getProductSold(productSoldId);//ProductNotFoundException
+        ProductSold productSoldToDelete = this.getProductSold(productSoldId);
 
         Long productId = 0L;
 
         try {
-            productId = productSoldToDelete.getProductId(); //NullPointerException
+            productId = productSoldToDelete.getProductId();
         } catch (final NullPointerException err) {
             throw new NullPointerException();
         }
@@ -104,44 +95,27 @@ public class ProductSoldServiceImpl implements ProductSoldService {
     }
 
     private double getAmountSrp(double srp, int soldQuantity, boolean isDiscounted) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "calculating products SRP");
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        double finalGrossAmount;
+        final double dblFnlGross;
 
-        logger.info(StringConstants.SERVICE_LAYER_DESCRIPTION.getValue(),
-                "checking if transaction is discounted",
-                currentMethodName);
         if (Boolean.TRUE.equals(isDiscounted)) {
             String finalGrossAmountStr = decimalFormat.format(
                     (srp * discountRate) * soldQuantity
             );
-            finalGrossAmount = Double.parseDouble(finalGrossAmountStr);
+            dblFnlGross = Double.parseDouble(finalGrossAmountStr);
         } else {
-            finalGrossAmount = srp * soldQuantity;
+            dblFnlGross = srp * soldQuantity;
         }
-        return finalGrossAmount;
+
+        return dblFnlGross;
     }
 
-    private double getAmountPrice(double price, int soldQuantity) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "calculating products Price");
-        return price * soldQuantity;
+    private double getAmountPrice(final double dblPrice, final int dblQuantity) {
+        return dblPrice * dblQuantity;
     }
 
-    private double getProfit(double totalSrp, double totalCapitalPrice) {
-        final String currentMethodName = new Throwable().getStackTrace()[0].getMethodName();
-        logger.info(StringConstants.SERVICE_LAYER.getValue(),
-                this.getClass().getName(),
-                currentMethodName,
-                "calculating products Profit");
-        return totalSrp - totalCapitalPrice;
+    private double getProfit(final double dblSrp, final double dblCapital) {
+        return dblSrp - dblCapital;
     }
 
 }

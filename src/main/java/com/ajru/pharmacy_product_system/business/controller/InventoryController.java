@@ -128,7 +128,7 @@ public class InventoryController {
                 "update a product",
                 request.getMethod(),
                 request.getRequestURL());
-        final Product editedProduct = productService.editProduct(id, Product.from(productDto));
+        final Product editedProduct = productService.updateProduct(id, Product.from(productDto));
         return new ResponseEntity<>(ProductDto.from(editedProduct), HttpStatus.OK);
     }
 
